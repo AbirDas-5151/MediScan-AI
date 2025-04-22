@@ -21,3 +21,25 @@ for index, row in metadata.iterrows():
     except Exception as e:
         print(f"Error processing {row['image_path']}: {e}")
         # Handle errors (e.g., remove row from metadata)
+
+
+from sklearn.model_selection import train_test_split
+
+metadata = pd.read_csv("data/processed/metadata.csv") # Assuming it has 'image_path' and 'label'
+labels = metadata['label']
+
+# Split into train+val and test
+train_val_df, test_df = train_test_split(
+    metadata, test_size=0.15, random_state=42, stratify=labels
+)
+
+# Split train+val into train and val
+train_df, val_df = train_test_split(
+    train_val_df, test_size=0.176, random_state=42, stratify=train_val_df['label'] # 0.15 / (1 - 0.15) = 0.176
+)
+
+print(f"Train size: {len(train_df)}, Val size: {len(val_df)}, Test size: {len(test_df)}")
+# Save these dataframes
+train_df.to_csv("data/processed/train_metadata.csv", index=False)
+val_df.to_csv("data/processed/val_metadata.csv", index=False)
+test_df.to_csv("data/processed/test_metadata.csv", index=False)
