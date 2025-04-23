@@ -18,3 +18,17 @@ __pycache__/
 # Logs and temporary files
 *.log
 *.tmp
+# These lines will ignore important content if you're not careful
+data/
+*.ipynb
+*.csv
+*.json
+*.txt
+*.xlsx
+*.h5
+*.pkl
+*.zip
+*.tar.gz
+*.tar
+*.tar.bz2
+*.tar.xz        
