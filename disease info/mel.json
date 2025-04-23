@@ -1,0 +1,7 @@
+{
+    "description": "Melanoma is a dangerous form of skin cancer that begins in pigment-producing cells. It can spread quickly if untreated.",
+    "causes": ["UV radiation", "Moles", "Genetics"],
+    "symptoms": ["New or changing mole", "Irregular borders", "Multiple colors"],
+    "treatment": ["Surgery", "Immunotherapy", "Chemotherapy", "Radiation"]
+  }
+  
