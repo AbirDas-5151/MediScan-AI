@@ -15,7 +15,8 @@ def get_device():
         return torch.device("cpu")
 
 def create_model(num_classes):
-    model = models.resnet50(pretrained=True)
+    from torchvision.models import ResNet50_Weights
+    model = models.resnet50(weights=ResNet50_Weights.DEFAULT)
     for param in model.parameters():
         param.requires_grad = False  # freeze base layers
 

@@ -1,19 +1,13 @@
 from utils.dataset_loader import HAM10000Dataset
 from torchvision import transforms
 from torch.utils.data import DataLoader, random_split
-
 from models.train_model import create_model, train
 
-num_classes = len(dataset.label_map)
-model = create_model(num_classes)
-train(model, train_loader, val_loader, num_epochs=10)
-
-
 # Setup paths
-csv_path = '/Users/yourname/Downloads/Medidata/HAM10000_metadata.csv'
+csv_path = '/Users/user/Downloads/Medidata/HAM10000_metadata.csv'
 image_dirs = [
-    '/Users/yourname/Downloads/Medidata/HAM10000_images_part_1',
-    '/Users/yourname/Downloads/Medidata/HAM10000_images_part_2'
+    '/Users/user/Downloads/Medidata/HAM10000_images_part_1',
+    '/Users/user/Downloads/Medidata/HAM10000_images_part_2'
 ]
 
 # Define image transforms
@@ -32,3 +26,10 @@ train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
+
+# ✅ Now we can define num_classes *after* dataset is created
+num_classes = len(dataset.label_map)
+
+# Create and train model
+model = create_model(num_classes)
+train(model, train_loader, val_loader, num_epochs=10)
