@@ -32,32 +32,42 @@ uploaded_file = st.file_uploader("Upload a skin image", type=["jpg", "jpeg", "pn
 
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="Uploaded Image", use_column_width=True)
+
+    # Layout columns: Image | Grad-CAM
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("### 📷 Uploaded Image")
+        st.image(image, use_column_width=True)
 
     # Load model
     num_classes = len(CLASS_NAMES)
     model = create_model(num_classes)
     model.load_state_dict(torch.load("resnet50_medical.pth", map_location="mps"))
 
-    # Apply Grad-CAM
-    with st.spinner("Analyzing with AI..."):
+    with st.spinner("🧠 Analyzing with AI..."):
         heatmap_img, pred_class = apply_gradcam(model, uploaded_file)
 
-    st.subheader(f"🔍 Predicted: **{CLASS_NAMES[pred_class]}**")
-    st.image(heatmap_img, caption="AI Attention (Grad-CAM)", use_column_width=True)
+    with col2:
+        st.markdown("### 🌈 Grad-CAM Heatmap")
+        st.image(heatmap_img, use_column_width=True)
 
-    # Optional disease info
+    st.markdown("---")
+    st.markdown(f"## 🧠 Predicted: **{CLASS_NAMES[pred_class]}**")
+
+    # Condition info section
     disease_key = CLASS_NAMES[pred_class].split("(")[0].strip().lower().replace(" ", "_")
     try:
         with open(f"disease_info/{disease_key}.json", "r") as f:
             import json
             disease_info = json.load(f)
 
-        st.markdown("### 🧾 Condition Info")
-        st.markdown(f"**Description:** {disease_info.get('description', '-')}")
-        st.markdown(f"**Causes:** {', '.join(disease_info.get('causes', []))}")
-        st.markdown(f"**Symptoms:** {', '.join(disease_info.get('symptoms', []))}")
-        st.markdown(f"**Treatment:** {', '.join(disease_info.get('treatment', []))}")
+        st.markdown("### 📖 Condition Details")
+        st.markdown(f"**📝 Description:** {disease_info.get('description', '-')}")
+        st.markdown(f"**🧪 Causes:** {', '.join(disease_info.get('causes', []))}")
+        st.markdown(f"**🔍 Symptoms:** {', '.join(disease_info.get('symptoms', []))}")
+        st.markdown(f"**💊 Treatment:** {', '.join(disease_info.get('treatment', []))}")
+
     except FileNotFoundError:
-        st.info("ℹ️ Condition info not found yet.")
+        st.info("ℹ️ Condition info not found for this class.")
 
